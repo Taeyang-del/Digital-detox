@@ -87,11 +87,11 @@
     </header>
 
     <nav>
-        <a href="#activities">Activities</a>
-        <a href="#checklist">Checklist</a>
-        <a href="#music">Calm Music</a>
-        <a href="#photos">Photo Viewer</a>
-        <a href="#art">Custom Art</a>
+        <a href="#activities" class="nav-link">Activities</a>
+        <a href="#checklist" class="nav-link">Checklist</a>
+        <a href="#music" class="nav-link">Calm Music</a>
+        <a href="#photos" class="nav-link">Photo Viewer</a>
+        <a href="#art" class="nav-link">Custom Art</a>
     </nav>
 
     <div class="container">
@@ -99,29 +99,40 @@
             <h2>Activity Recommendations</h2>
             <p>Explore activities to relax and unwind.</p>
             <button class="button" onclick="getRecommendations()">Get Recommendations</button>
-            <ul id="activity-list"></ul>
+            <div id="activity-list" class="activity-list"></div>
         </section>
 
         <section id="checklist" class="card">
             <h2>Daily Checklist</h2>
             <p>Stay productive and mindful with this checklist.</p>
-            <ul class="checklist" id="checklist">
-                <li><input type="checkbox"> Read a book for 30 minutes</li>
-                <li><input type="checkbox"> Take a walk outdoors</li>
-                <li><input type="checkbox"> Meditate for 10 minutes</li>
-                <li><input type="checkbox"> Write in your journal</li>
-                <li><input type="checkbox"> Call a loved one</li>
+            <ul class="checklist" id="checklist-items">
+                <li>
+                    <input type="checkbox" onchange="toggleTask(this)">
+                    <span>Read a book for 30 minutes</span>
+                    <button onclick="deleteTask(this)" class="delete-btn">×</button>
+                </li>
+                <li>
+                    <input type="checkbox" onchange="toggleTask(this)">
+                    <span>Take a walk outdoors</span>
+                    <button onclick="deleteTask(this)" class="delete-btn">×</button>
+                </li>
+                <li>
+                    <input type="checkbox" onchange="toggleTask(this)">
+                    <span>Meditate for 10 minutes</span>
+                    <button onclick="deleteTask(this)" class="delete-btn">×</button>
+                </li>
             </ul>
+            <div class="add-task">
+                <input type="text" id="new-task" placeholder="Add new task">
+                <button onclick="addTask()" class="button">Add</button>
+            </div>
         </section>
 
         <section id="music" class="card">
             <h2>Calm Music</h2>
             <p>Relax with some calm background music.</p>
             <div class="music-player">
-                <audio controls>
-                    <source src="https://www.bensound.com/bensound-music/bensound-relaxing.mp3" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
+                <audio id="audio-player" src="https://www.bensound.com/bensound-music/bensound-relaxing.mp3" controls></audio>
             </div>
         </section>
 
@@ -153,7 +164,8 @@
         const photos = [
             'Art1.webp',
             'Art2.webp',
-            'Art3.webp'
+            'Art3.webp',
+            'Art4.webp',
         ];
         let currentPhotoIndex = 0;
 
@@ -188,6 +200,36 @@
             }
         }
 
+        function toggleTask(checkbox) {
+            const task = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                task.classList.add('completed');
+            } else {
+                task.classList.remove('completed');
+            }
+        }
+
+        function deleteTask(button) {
+            const taskItem = button.parentElement;
+            taskItem.remove();
+        }
+
+        function addTask() {
+            const newTaskInput = document.getElementById('new-task');
+            const taskText = newTaskInput.value.trim();
+
+            if (taskText) {
+                const newTask = document.createElement('li');
+                newTask.innerHTML = `
+                    <input type="checkbox" onchange="toggleTask(this)">
+                    <span>${taskText}</span>
+                    <button onclick="deleteTask(this)" class="delete-btn">×</button>
+                `;
+                document.getElementById('checklist-items').appendChild(newTask);
+                newTaskInput.value = '';
+            }
+        }
+
         function getRecommendations() {
             const activities = [
                 'Try a new recipe.',
@@ -199,9 +241,10 @@
             const list = document.getElementById('activity-list');
             list.innerHTML = '';
             const randomActivity = activities[Math.floor(Math.random() * activities.length)];
-            const li = document.createElement('li');
-            li.textContent = randomActivity;
-            list.appendChild(li);
+            const activityItem = document.createElement('div');
+            activityItem.textContent = randomActivity;
+            activityItem.className = 'activity-item';
+            list.appendChild(activityItem);
         }
     </script>
 </body>
