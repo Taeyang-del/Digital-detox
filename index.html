@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Detox App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        nav {
+            background-color: #333;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-around;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            padding: 2rem;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .photo-viewer {
+            text-align: center;
+        }
+        .photo-viewer img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .art-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Digital Detox App</h1>
+    </header>
+
+    <nav>
+        <a href="#activities">Activities</a>
+        <a href="#checklist">Checklist</a>
+        <a href="#music">Calm Music</a>
+        <a href="#photos">Photo Viewer</a>
+        <a href="#art">Custom Art</a>
+    </nav>
+
+    <div class="container">
+        <section id="activities" class="card">
+            <h2>Activity Recommendations</h2>
+            <p>Explore activities to relax and unwind.</p>
+            <button class="button" onclick="getRecommendations()">Get Recommendations</button>
+            <ul id="activity-list"></ul>
+        </section>
+
+        <section id="checklist" class="card">
+            <h2>Daily Checklist</h2>
+            <p>Stay productive and mindful with this checklist.</p>
+            <ul class="checklist" id="checklist">
+                <li><input type="checkbox"> Read a book for 30 minutes</li>
+                <li><input type="checkbox"> Take a walk outdoors</li>
+                <li><input type="checkbox"> Meditate for 10 minutes</li>
+                <li><input type="checkbox"> Write in your journal</li>
+                <li><input type="checkbox"> Call a loved one</li>
+            </ul>
+        </section>
+
+        <section id="music" class="card">
+            <h2>Calm Music</h2>
+            <p>Relax with some calm background music.</p>
+            <div class="music-player">
+                <audio controls>
+                    <source src="https://www.bensound.com/bensound-music/bensound-relaxing.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </section>
+
+        <section id="photos" class="card">
+            <h2>Photo Viewer</h2>
+            <div class="photo-viewer">
+                <img id="photo" src="https://via.placeholder.com/600" alt="Placeholder">
+                <div>
+                    <button class="button" onclick="prevPhoto()">Previous</button>
+                    <button class="button" onclick="nextPhoto()">Next</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="art" class="card">
+            <h2>Custom Art</h2>
+            <div class="art-container">
+                <canvas id="artCanvas" width="400" height="400"></canvas>
+                <button class="button" onclick="generateArt()">Generate Art</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 Digital Detox App. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const photos = [
+            'Art1.webp',
+            'Art2.webp',
+            'Art3.webp'
+        ];
+        let currentPhotoIndex = 0;
+
+        function prevPhoto() {
+            currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+            document.getElementById('photo').src = photos[currentPhotoIndex];
+        }
+
+        function nextPhoto() {
+            currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+            document.getElementById('photo').src = photos[currentPhotoIndex];
+        }
+
+        function generateArt() {
+            const canvas = document.getElementById('artCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Generate random circles
+            for (let i = 0; i < 10; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const radius = Math.random() * 50;
+                const color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.7)`;
+
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+            }
+        }
+
+        function getRecommendations() {
+            const activities = [
+                'Try a new recipe.',
+                'Do some yoga or stretching.',
+                'Draw or paint something.',
+                'Take a 10-minute breathing exercise.',
+                'Organize your workspace.'
+            ];
+            const list = document.getElementById('activity-list');
+            list.innerHTML = '';
+            const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+            const li = document.createElement('li');
+            li.textContent = randomActivity;
+            list.appendChild(li);
+        }
+    </script>
+</body>
+</html>
