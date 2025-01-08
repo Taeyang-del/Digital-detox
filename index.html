@@ -1,6 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+            }
+            return null;
+        }
+
+        function saveData() {
+            const checklistItems = document.querySelectorAll('#checklist-items li');
+            const checklistData = [];
+            checklistItems.forEach(item => {
+                const task = item.querySelector('span').textContent;
+                const completed = item.querySelector('input[type="checkbox"]').checked;
+                checklistData.push({ task, completed });
+            });
+            setCookie('checklistData', JSON.stringify(checklistData), 365);
+
+            const selectedTime = document.getElementById('time-selector').value;
+            setCookie('selectedTime', selectedTime, 365);
+        }
+
+        function loadData() {
+            const checklistData = getCookie('checklistData');
+            if (checklistData) {
+                const checklistItems = JSON.parse(checklistData);
+                const checklistElement = document.getElementById('checklist-items');
+                checklistElement.innerHTML = '';
+                checklistItems.forEach(item => {
+                    const newTask = document.createElement('li');
+                    newTask.innerHTML = `
+                        <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTask(this); saveData();">
+                        <span>${item.task}</span>
+                        <button onclick="deleteTask(this); saveData();" class="delete-btn">×</button>
+                    `;
+                    checklistElement.appendChild(newTask);
+                });
+            }
+
+            const selectedTime = getCookie('selectedTime');
+            if (selectedTime) {
+                document.getElementById('time-selector').value = selectedTime;
+            }
+        }
+
+        window.onbeforeunload = saveData;
+        window.onload = function() {
+            checkCookie();
+            loadData();
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Detox App</title>
@@ -71,14 +133,6 @@
             border-radius: 8px;
             margin-bottom: 1rem;
         }
-        .art-container {
-            text-align: center;
-            margin-top: 2rem;
-        }
-        canvas {
-            border: 1px solid #ddd;
-            margin-top: 1rem;
-        }
         .breathing-container {
             text-align: center;
             padding: 2rem;
@@ -95,9 +149,6 @@
             margin-top: 1rem;
             font-size: 1.5rem;
             font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         .countdown {
             font-size: 1.2rem;
@@ -183,7 +234,7 @@
         <section id="photos" class="card">
             <h2>Photo Viewer</h2>
             <div class="photo-viewer">
-                <img id="photo" src="https://via.placeholder.com/600" alt="Placeholder">
+                <img id="photo" src="Art1.webp" alt="Photo one">
                 <div>
                     <button class="button" onclick="prevPhoto()">Previous</button>
                     <button class="button" onclick="nextPhoto()">Next</button>
@@ -221,6 +272,81 @@
                     <option value="25">25 minutes</option>
                     <option value="30">30 minutes</option>
                     <option value="45">45 minutes</option>
+                    <option value="60">60 minutes</option>
+                    <option value="90">90 minutes</option>
+                    <option value="120">120 minutes</option>
+                    <option value="180">180 minutes</option>
+                    <option value="240">240 minutes</option>
+                    <option value="300">300 minutes</option>
+                    <option value="360">360 minutes</option>
+                    <option value="420">420 minutes</option>
+                    <option value="480">480 minutes</option>
+                    <option value="540">540 minutes</option>
+                    <option value="600">600 minutes</option>
+                    <option value="660">660 minutes</option>
+                    <option value="720">720 minutes</option>
+                    <option value="780">780 minutes</option>
+                    <option value="840">840 minutes</option>
+                    <option value="900">900 minutes</option>
+                    <option value="960">960 minutes</option>
+                    <option value="1020">1020 minutes</option>
+                    <option value="1080">1080 minutes</option>
+                    <option value="1140">1140 minutes</option>
+                    <option value="1200">1200 minutes</option>
+                    <option value="1260">1260 minutes</option>
+                    <option value="1320">1320 minutes</option>
+                    <option value="1380">1380 minutes</option>
+                    <option value="1440">1440 minutes</option>
+                    <option value="1500">1500 minutes</option>
+                    <option value="1560">1560 minutes</option>
+                    <option value="1620">1620 minutes</option>
+                    <option value="1680">1680 minutes</option>
+                    <option value="1740">1740 minutes</option>
+                    <option value="1800">1800 minutes</option>
+                    <option value="1860">1860 minutes</option>
+                    <option value="1920">1920 minutes</option>
+                    <option value="1980">1980 minutes</option>
+                    <option value="2040">2040 minutes</option>
+                    <option value="2100">2100 minutes</option>
+                    <option value="2160">2160 minutes</option>
+                    <option value="2220">2220 minutes</option>
+                    <option value="2280">2280 minutes</option>
+                    <option value="2340">2340 minutes</option>
+                    <option value="2400">2400 minutes</option>
+                    <option value="2460">2460 minutes</option>
+                    <option value="2520">2520 minutes</option>
+                    <option value="2580">2580 minutes</option>
+                    <option value="2640">2640 minutes</option>
+                    <option value="2700">2700 minutes</option>
+                    <option value="2760">2760 minutes</option>
+                    <option value="2820">2820 minutes</option>
+                    <option value="2880">2880 minutes</option>
+                    <option value="2940">2940 minutes</option>
+                    <option value="3000">3000 minutes</option>
+                    <option value="3060">3060 minutes</option>
+                    <option value="3120">3120 minutes</option>
+                    <option value="3180">3180 minutes</option>
+                    <option value="3240">3240 minutes</option>
+                    <option value="3300">3300 minutes</option>
+                    <option value="3360">3360 minutes</option>
+                    <option value="3420">3420 minutes</option>
+                    <option value="3480">3480 minutes</option>
+                    <option value="3540">3540 minutes</option>
+                    <option value="3600">3600 minutes</option>
+                    <option value="3660">3660 minutes</option>
+                    <option value="3720">3720 minutes</option>
+                    <option value="3780">3780 minutes</option>
+                    <option value="3840">3840 minutes</option>
+                    <option value="3900">3900 minutes</option>
+                    <option value="3960">3960 minutes</option>
+                    <option value="4020">4020 minutes</option>
+                    <option value="4080">4080 minutes</option>
+                    <option value="4140">4140 minutes</option>
+                    <option value="4200">4200 minutes</option>
+                    <option value="4260">4260 minutes</option>
+                    <option value="Infinite">Infinite minutes</option>
+
+                
                 </select>
                 <button class="button" onclick="startBreathing()">Start</button>
             </div>
@@ -233,21 +359,26 @@
 
     <script>
         const photos = [
-            'Art1.webp',
             'Art2.webp',
             'Art3.webp',
-            'Art4.webp',
+            'Art1.webp',
         ];
         let currentPhotoIndex = 0;
 
+        function updatePhoto() {
+            const photoElement = document.getElementById('photo');
+            photoElement.src = photos[currentPhotoIndex];
+            photoElement.alt = `Photo ${currentPhotoIndex + 1}`;
+        }
+
         function prevPhoto() {
             currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
-            document.getElementById('photo').src = photos[currentPhotoIndex];
+            updatePhoto();
         }
 
         function nextPhoto() {
             currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
-            document.getElementById('photo').src = photos[currentPhotoIndex];
+            updatePhoto();
         }
 
         function generateArt() {
@@ -271,7 +402,8 @@
             }
         }
 
-        let breathingSteps = ["Breathe in...", "Hold...", "Breathe out..."];
+        const breathingSteps = ["Breathe in...", "Hold...", "Breathe out..."];
+        const stepDurations = [4, 7, 8]; // 4 seconds in, 7 hold, 8 out
         let stepIndex = 0;
         let totalTime = 0;
         let timeRemaining = 0;
@@ -280,9 +412,12 @@
 
         function startBreathing() {
             const timeSelector = document.getElementById("time-selector");
+            if(timeSelector.value === "Infinite") {
+                timeRemaining = "Infinite";
+            } else {
             totalTime = parseInt(timeSelector.value) * 60; // Convert minutes to seconds
             timeRemaining = totalTime;
-
+            }
             const countdownElement = document.getElementById("countdown");
             const breathingText = document.getElementById("breathing-text");
             const circle = document.getElementById("breathing-circle");
@@ -292,38 +427,61 @@
             circle.style.animation = "none";
 
             stepIndex = 0;
-            startBreathingCycle();
-        }
-
-        function startBreathingCycle() {
-            const countdownElement = document.getElementById("countdown");
-            const breathingText = document.getElementById("breathing-text");
-            const circle = document.getElementById("breathing-circle");
-
-            cycleInterval = setInterval(() => {
+            clearInterval(countdownInterval);
+            if (timeRemaining !== "Infinite") {
+            countdownInterval = setInterval(() => {
                 if (timeRemaining <= 0) {
+                    clearInterval(countdownInterval);
                     clearInterval(cycleInterval);
                     breathingText.textContent = "Well done!";
                     circle.style.animation = "none";
                     return;
                 }
+                timeRemaining--;
+                countdownElement.textContent = `${timeRemaining} seconds remaining`;
+            }, 1000);
+        }
+            startBreathingCycle();
+        }
 
+        function startBreathingCycle() {
+            const breathingText = document.getElementById("breathing-text");
+            const circle = document.getElementById("breathing-circle");
+            clearInterval(cycleInterval);
+            stepIndex = 0;
+            cycleInterval = setInterval(() => {
                 if (stepIndex === 0) {
                     breathingText.textContent = "Breathe in...";
-                    circle.style.animation = "breathing-in 4s forwards";
+                    circle.style.animation = `breathing-in ${stepDurations[0]}s forwards`;
                 } else if (stepIndex === 1) {
                     breathingText.textContent = "Hold...";
                     circle.style.animation = "none";
                 } else if (stepIndex === 2) {
                     breathingText.textContent = "Breathe out...";
-                    circle.style.animation = "breathing-out 8s forwards";
+                    circle.style.animation = `breathing-out ${stepDurations[2]}s forwards`;
                 }
 
-                stepIndex = (stepIndex + 1) % 3;
-                timeRemaining -= stepIndex === 0 ? 4 : stepIndex === 1 ? 7 : 8;
-                countdownElement.textContent = `${timeRemaining} seconds remaining`;
+                setTimeout(() => {
+                    stepIndex = (stepIndex + 1) % 3;
+                }, stepDurations[stepIndex] * 1000);
+            }, stepDurations[stepIndex] * 1000);
+        }
 
-            }, 4000); // Adjust interval for each step of the cycle
+        function getRecommendations() {
+            const activities = [
+                'Try a new recipe.',
+                'Do some yoga or stretching.',
+                'Draw or paint something.',
+                'Take a 10-minute breathing exercise.',
+                'Organize your workspace.'
+            ];
+            const list = document.getElementById('activity-list');
+            list.innerHTML = '';
+            const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+            const activityItem = document.createElement('div');
+            activityItem.textContent = randomActivity;
+            activityItem.className = 'activity-item';
+            list.appendChild(activityItem);
         }
 
         function toggleTask(checkbox) {
@@ -355,22 +513,28 @@
                 newTaskInput.value = '';
             }
         }
+        function setWelcomeCookie() {
+            const username = prompt("Please enter your name:");
+            if (username) {
+            setCookie('username', username, 365);
+            alert(`Welcome, ${username}!`);
+            }
+        }
 
-        function getRecommendations() {
-            const activities = [
-                'Try a new recipe.',
-                'Do some yoga or stretching.',
-                'Draw or paint something.',
-                'Take a 10-minute breathing exercise.',
-                'Organize your workspace.'
-            ];
-            const list = document.getElementById('activity-list');
-            list.innerHTML = '';
-            const randomActivity = activities[Math.floor(Math.random() * activities.length)];
-            const activityItem = document.createElement('div');
-            activityItem.textContent = randomActivity;
-            activityItem.className = 'activity-item';
-            list.appendChild(activityItem);
+        function checkCookie() {
+            const username = getCookie('username');
+            if (username) {
+            alert(`Welcome back, ${username}!`);
+            } else {
+            setWelcomeCookie();
+            }
+        }
+
+        function signOut() {
+            setCookie('username', '', -1); // Delete the cookie
+            alert('You have signed out.');
+            setWelcomeCookie();
+        
         }
     </script>
 </body>
