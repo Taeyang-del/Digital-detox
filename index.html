@@ -157,6 +157,45 @@
         .dropdown {
             margin: 1rem 0;
         }
+
+        /* The Modal (background) */
+        .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+        .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+        }
+
         @keyframes breathing-in {
             from {
                 transform: scale(1);
@@ -179,6 +218,18 @@
     <header>
         <h1>Digital Detox App</h1>
     </header>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="userhello">Welcome back!</p>
+      <input type="text" id="userinput">
+    </div>
+  
+  </div>
 
     <nav>
         <a href="#activities" class="nav-link">Activities</a>
@@ -509,24 +560,43 @@
                     <span>${taskText}</span>
                     <button onclick="deleteTask(this)" class="delete-btn">×</button>
                 `;
-                document.getElementById('checklist-items').appendChild(newTask);
+                document.getElementById('checklist-items').appendChild(newTask);ˆ
                 newTaskInput.value = '';
-            }
-        }
-        function setWelcomeCookie() {
-            const username = prompt("Please enter your name:");
-            if (username) {
-            setCookie('username', username, 365);
-            alert(`Welcome, ${username}!`);
             }
         }
 
         function checkCookie() {
             const username = getCookie('username');
             if (username) {
-            alert(`Welcome back, ${username}!`);
+            document.getElementById('userinput').style.display = 'none';
+            document.getElementById('userhello').textContent = `Welcome back, ${username}!`;
             } else {
             setWelcomeCookie();
+            }
+        }
+        function setWelcomeCookie() {
+            const userInput = document.getElementById('userinput');
+            userInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    saveUsername();
+                }
+            });
+
+            const saveButton = document.createElement('button');
+            saveButton.textContent = 'Save';
+            saveButton.className = 'button';
+            saveButton.onclick = saveUsername;
+            document.querySelector('.modal-content').appendChild(saveButton);
+        }
+
+        function saveUsername() {
+            const userInput = document.getElementById('userinput');
+            const username = userInput.value.trim();
+            if (username) {
+                setCookie('username', username, 365);
+                document.getElementById('userhello').textContent = `Welcome back, ${username}!`;
+                userInput.style.display = 'none';
+                document.querySelector('.modal-content .button').style.display = 'none';
             }
         }
 
@@ -536,6 +606,32 @@
             setWelcomeCookie();
         
         }
+
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+            modal.style.display = "none";
+            }
+        }
+
+        // Show the modal when the page loads
+        window.onload = function() {
+            checkCookie();
+            loadData();
+            modal.style.display = "block";
+        }
+
     </script>
 </body>
 </html>
